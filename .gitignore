@@ -1,0 +1,21 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+dist/
+coverage/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Logs and local output
+*.log
+etl/output/
+
+# OS files
+.DS_Store

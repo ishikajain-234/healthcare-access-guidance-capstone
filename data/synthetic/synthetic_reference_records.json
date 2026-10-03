@@ -1,0 +1,59 @@
+{
+  "source_document": {
+    "source_id": "SYNTH-SRC-2026-V1",
+    "source_name": "Capstone Synthetic Demonstration Reference Dataset",
+    "source_type": "SYNTHETIC_SPECIFICATION",
+    "publisher": "Capstone Student Engineering Team",
+    "publication_date": null,
+    "source_url": null,
+    "is_authoritative": false,
+    "is_simulated": true,
+    "version_label": "demo-v0.1",
+    "integrity_hash": "d13a90990a3652423ff8cc9f889e2d1dcb68c6a74bd8934cde9bb69c9bfb124c",
+    "notes": "Student-team-reviewed synthetic demonstration reference records for 2nd-year academic prototype testing. Strictly non-clinical and non-authoritative."
+  },
+  "records": [
+    {
+      "category_id": "DEMO_ALPHA",
+      "package_id": "DEMO-ALPHA-001",
+      "specialty_name": "Simulated Domain Alpha",
+      "procedure_name": "Simulated Service Item Alpha [Synthetic Demo]",
+      "procedure_code": "CODE-DEMO-ALPHA",
+      "is_simulated_reference": true,
+      "data_status": "SYNTHETIC_DEMO",
+      "simulation_notice": "DEMONSTRATION RECORD ONLY: This record is entirely simulated for 2nd-year academic evaluation. It does not represent an actual healthcare package, real government scheme, or medical rate.",
+      "official_verification_channel": "Authorized Hospital Help Desk / Official State Health Channel",
+      "help_desk_contact": "Official Scheme Channel / Hospital Desk",
+      "seed_version": "demo-v0.1",
+      "created_by": "student_engineering_team"
+    },
+    {
+      "category_id": "DEMO_BETA",
+      "package_id": "DEMO-BETA-002",
+      "specialty_name": "Simulated Domain Beta",
+      "procedure_name": "Simulated Service Item Beta [Synthetic Demo]",
+      "procedure_code": "CODE-DEMO-BETA",
+      "is_simulated_reference": true,
+      "data_status": "SYNTHETIC_DEMO",
+      "simulation_notice": "DEMONSTRATION RECORD ONLY: This record is entirely simulated for 2nd-year academic evaluation. It does not represent an actual healthcare package, real government scheme, or medical rate.",
+      "official_verification_channel": "Authorized Hospital Help Desk / Official State Health Channel",
+      "help_desk_contact": "Official Scheme Channel / Hospital Desk",
+      "seed_version": "demo-v0.1",
+      "created_by": "student_engineering_team"
+    },
+    {
+      "category_id": "DEMO_GAMMA",
+      "package_id": "DEMO-GAMMA-003",
+      "specialty_name": "Simulated Domain Gamma",
+      "procedure_name": "Simulated Service Item Gamma [Synthetic Demo]",
+      "procedure_code": "CODE-DEMO-GAMMA",
+      "is_simulated_reference": true,
+      "data_status": "SYNTHETIC_DEMO",
+      "simulation_notice": "DEMONSTRATION RECORD ONLY: This record is entirely simulated for 2nd-year academic evaluation. It does not represent an actual healthcare package, real government scheme, or medical rate.",
+      "official_verification_channel": "Authorized Hospital Help Desk / Official State Health Channel",
+      "help_desk_contact": "Official Scheme Channel / Hospital Desk",
+      "seed_version": "demo-v0.1",
+      "created_by": "student_engineering_team"
+    }
+  ]
+}
