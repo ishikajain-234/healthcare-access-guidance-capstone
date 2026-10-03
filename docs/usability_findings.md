@@ -44,12 +44,12 @@
 
 *This section will be synthesized by the student capstone team upon completion of all participant sessions.*
 
-### A. Aggregate Metrics
-- **Total Completed Participant Sessions:** `[Pending real session execution: Target 3-5]`
-- **Overall Comprehension Success Rate:** `[Pending evaluation: Target >= 80%]`
-- **Synthetic Nature Recognition Rate:** `[Pending evaluation: Target 100%]`
-- **Zero-Eligibility Comprehension Rate:** `[Pending evaluation: Target 100%]`
-- **No-Match Recovery Comprehension Rate:** `[Pending evaluation: Target 100%]`
+### A. Usability Completion Criteria & Evaluation Status
+- **Completed Participant Sessions:** `[Pending real session execution: At least 3 required]`
+- **Eligibility Misunderstanding Rate:** `[Requirement: 0% — No participant may misunderstand the prototype as an eligibility or coverage determination system]`
+- **Clinical/Diagnostic Misunderstanding Rate:** `[Requirement: 0% — No participant may misunderstand the prototype as a medical diagnosis or triage system]`
+- **Hospital Availability Misunderstanding Rate:** `[Requirement: 0% — No participant may misunderstand the prototype as an operational hospital availability or cashless guarantee system]`
+- **Protocol Action on Misunderstanding:** If any participant exhibits misunderstanding on eligibility, coverage, diagnosis, hospital availability, or legal status, the team must document the specific confusion, formulate required UI copy changes, update the interface, and retest with new participants until zero misunderstandings occur.
 
 ### B. Common Misunderstandings & Ambiguities Observed
 - `[Pending real participant observations]`
@@ -57,7 +57,7 @@
 
 ### C. Required UI Copy & Layout Refinements
 - `[Pending real participant feedback]`
-- *(To be recorded: Any adjustments required to make disclaimer banners clearer, improve contrast, or emphasize that confirmation happens strictly outside the software).*
+- *(To be recorded: Document specific wording modifications made to eliminate any observed ambiguity before retesting).*
 
 ### D. Problem Hypothesis Evaluation
 - **Core Hypothesis:** *"Providing structured, non-clinical reference routing using controlled categories helps users understand public healthcare navigation pathways without triggering clinical triage or false eligibility assumptions."*

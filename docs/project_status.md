@@ -2,15 +2,17 @@
 
 **Project:** Healthcare Access Guidance Prototype  
 **Academic Context:** 2nd-Year Application Programming & Data Engineering Capstone  
-**Current Milestone:** Phase 2 Complete (Validation, Safety Hardening & Source Verification Preparation)  
+**Current Milestone:** Phase 2 Implementation Ready for Local Verification  
 **Baseline Git Tag:** `v0.1-synthetic-vertical-slice` (Phase 1)  
-**Phase 2 Git Tag:** `v0.2-phase-2-validation` (Phase 2)  
+**Proposed Tag:** `v0.2-phase-2-validation` (Pending Local Team Execution & Verification Log Recording)  
 
 ---
 
 > ### Academic Integrity & Real-World Claims Disclaimer
 > **This prototype does NOT claim to solve a proven real-world healthcare gap.**  
 > It is an academic engineering demonstration designed to investigate whether administrative, non-clinical healthcare navigation can be safely modeled using deterministic state machines, append-only telemetry, controlled categorical lookups, and clear boundary disclosures. Any future deployment to real patient communities would require extensive institutional ethics approvals, statutory government partnerships, and external clinical certification.
+>
+> **Verification Status**: Phase 2 implementation is ready for local verification. Formal completion and tagging as `v0.2-phase-2-validation` occur only after our capstone team executes the test suites, completes the local verification log with actual local outputs, and conducts at least 3 usability sessions with zero participant misunderstandings.
 
 ---
 
@@ -65,6 +67,7 @@ The following limitations are intentionally preserved and remain unresolved at t
 A prospective Phase 3 (Source-Verified Ingestion & Controlled Pilot) would strictly require:
 1. **Full Gate Signoff**: Formal verification of all 13 conditions in [source_verification_gate.md](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/source_verification_gate.md).
 2. **Authoritative Government Source**: Acquisition of a statutory public document from an official `.gov.in` domain with recorded SHA-256 hash.
-3. **Field Extraction Audit**: Two-person manual signoff that extracted fields exclude clinical criteria, hospital tariffs, or copayment calculations.
-4. **Production Authentication**: Replacement of mock tokens with production-grade JWT/OIDC identity providers before disabling the local demonstration bypass.
-5. **Independent Ethics Review**: Faculty oversight approval before conducting any user studies outside peer capstone evaluators.
+3. **Field Extraction Audit**: Two-person manual signoff that extracted fields exclude clinical diagnostic criteria, symptom triage, and personal admission rules, and that any published statutory reference amounts include source provenance, version/date, and the mandatory non-cost disclaimer.
+4. **Usability Protocol Ratification**: Completion of at least 3 participant sessions with zero misunderstandings regarding eligibility, coverage, diagnosis, availability, or legal status (or documented copy revisions and clean retests).
+5. **Production Authentication**: Replacement of mock tokens with production-grade JWT/OIDC identity providers before disabling the local demonstration bypass.
+6. **Independent Ethics Review**: Faculty oversight approval before conducting any user studies outside peer capstone evaluators.

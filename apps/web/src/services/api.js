@@ -154,11 +154,7 @@ export async function getOfficialSupportRoutes() {
  * GET /api/admin/analytics/summary
  */
 export async function getAdminAnalyticsSummary() {
-  const res = await fetch(`${BASE_URL}/admin/analytics/summary`, {
-    headers: {
-      'Authorization': 'Bearer demo-admin-token',
-    },
-  });
+  const res = await fetch(`${BASE_URL}/admin/analytics/summary`);
   if (!res.ok) throw new Error(`HTTP error ${res.status}`);
   return res.json();
 }
@@ -168,11 +164,7 @@ export async function getAdminAnalyticsSummary() {
  * GET /api/admin/analytics/data-quality
  */
 export async function getDataQualitySummary() {
-  const res = await fetch(`${BASE_URL}/admin/analytics/data-quality`, {
-    headers: {
-      'Authorization': 'Bearer demo-admin-token',
-    },
-  });
+  const res = await fetch(`${BASE_URL}/admin/analytics/data-quality`);
   if (!res.ok) throw new Error(`HTTP error ${res.status}`);
   return res.json();
 }

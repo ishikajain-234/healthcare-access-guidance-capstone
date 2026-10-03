@@ -6,7 +6,6 @@ const guidanceSessions = require('./guidanceSessions');
 const referencePackages = require('./referencePackages');
 const officialSupportRoutes = require('./officialSupportRoutes');
 const adminAnalytics = require('./adminAnalytics');
-const requireAdmin = require('../middleware/requireAdmin');
 
 // GET /api/health
 router.get('/health', (req, res) => {
@@ -45,11 +44,10 @@ router.use('/reference-packages', referencePackages);
 router.use('/official-support-routes', officialSupportRoutes);
 
 // Admin Routes:
-// Protected by requireAdmin authorization boundary.
+// requireAdmin authorization boundary is enforced at the router level in adminAnalytics.js.
 // For local demonstration only, ALLOW_UNAUTHENTICATED_ADMIN_DEMO=true enables bypass.
 // GET /api/admin/analytics/summary
 // GET /api/admin/analytics/data-quality
-router.use('/admin', requireAdmin);
 router.use('/admin/analytics', adminAnalytics);
 
 module.exports = router;

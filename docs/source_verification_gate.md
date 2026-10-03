@@ -27,7 +27,12 @@ Before any external or official public reference dataset can be imported into Po
 8. **Cryptographic SHA-256 Hash**: The raw downloaded file must have its SHA-256 hash computed and recorded immediately upon acquisition. Any discrepancy between downloaded copies and recorded hashes immediately invalidates the ingestion run.
 9. **Import-Run Relational Audit Metadata**: Every import must generate a formal `source_import_run` audit record documenting the import execution timestamp, executing script, row counts, and error ledger.
 10. **Two-Person Manual Review**: Every record proposed for production display must undergo dual-signoff manual review by the student capstone team to verify that text conforms to non-clinical, non-promotional standards.
-11. **Explicit List of Prohibited Fields**: Any fields in the source document relating to clinical diagnostic criteria, patient admission requirements, hospital tariffs, copay formulas, clinician specialties, or reimbursement rules must be explicitly flagged as **PROHIBITED FROM DISPLAY** and excluded from user-facing views.
+11. **Published Reference Amounts & Prohibited Fields Policy**:
+    - **Prohibited Clinical/Personal Fields**: Fields containing individual clinical diagnostic rules, personal patient requirements, surgical admission guidelines, doctor specialties, or private billing formulas are strictly prohibited from display.
+    - **Published Reference Amounts Condition**: A published statutory reference amount or tariff may be displayed **ONLY** if accompanied by:
+      - Full source provenance (official publishing authority and document title).
+      - Verified publication version and date.
+      - A **mandatory display disclaimer** explicitly stating that the published reference amount is an administrative reference only, and is **NOT** a patient out-of-pocket cost, eligibility result, coverage amount, approval guarantee, or cashless hospital entitlement.
 12. **Mandatory Non-Eligibility / Non-Coverage Boundary Clause**: Every ingested record must be tagged with mandatory boilerplate clarifying that public package data do not constitute coverage determination, pre-authorization, hospital bed availability, cashless admission guarantee, or legal entitlement.
 13. **Deterministic Fallback & Parser Failure Protocol**: A documented fallback plan must govern scenarios where official source files are corrupted, structurally altered, or unparseable. The fallback must default to the controlled synthetic recovery route (`PUBLIC_REFERENCE_NOT_FOUND` / `SUPPORT_ROUTE_SHOWN`) rather than emitting partial or unverified records.
 
@@ -48,8 +53,8 @@ Every candidate external data source must be evaluated using this audit table:
 | **Access date** | *(YYYY-MM-DD)* |
 | **SHA-256 file hash** | *(64-character hexadecimal SHA-256 string)* |
 | **Fields available** | *(Comma-separated list of raw fields in source)* |
-| **Fields suitable for display** | *(Specialty category, procedure name, package code)* |
-| **Fields prohibited from display** | *(Tariff amounts, pre-auth clinical notes, surgical criteria)* |
+| **Fields suitable for display** | *(Specialty category, procedure name, package code; published reference amounts ONLY with full provenance & mandatory non-cost disclaimer)* |
+| **Fields prohibited from display** | *(Clinical diagnostic notes, triage criteria, surgical indications, personal admission rules)* |
 | **Source locator method** | *(Page number + Table name + Row number)* |
 | **Data limitations** | *(Static reference list; does not reflect live hospital empaneled status)* |
 | **Approved prototype use** | *(Simulated administrative reference routing demonstration only)* |

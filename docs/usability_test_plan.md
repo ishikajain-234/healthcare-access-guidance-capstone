@@ -90,15 +90,21 @@ Facilitators must ask the following structured questions immediately following s
 
 ---
 
-## 4. Participant Passing / Comprehension Success Criteria
+## 4. Usability Completion Criteria & Passing Standards
 
-A participant session is marked as **PASS** if and only if the participant demonstrates unprompted, correct understanding across all five core criteria:
-
-1. **Synthetic Data**: Understands that all displayed categories, reference codes, and packages are simulated test records created by students.
-2. **Zero Clinical Triage**: Understands that the app has no ability to diagnose conditions, interpret symptoms, evaluate urgency, or prescribe treatment.
-3. **Zero Eligibility / Coverage Adjudication**: Understands that the app cannot assess whether a patient qualifies for government schemes, private insurance, or financial assistance.
-4. **Prototype Seed Limitation**: Understands that a "no-match" result reflects only the prototype's restricted 3-record demo scope and does NOT mean actual healthcare coverage is unavailable.
-5. **External Verification**: Understands that the informational route directs users to verify information through official government portals and authorized hospital helpdesks outside this software.
+To validate the prototype for Phase 2 completion:
+1. **Minimum Sample Size**: At least **3 completed participant sessions** must be conducted and logged.
+2. **Zero Misunderstanding Requirement**: It is mandatory that **no participant** misunderstands the prototype as an eligibility, coverage, diagnosis, availability, or legal-status system.
+3. **Core Comprehension Dimensions**: Every participant must accurately understand:
+   - **Synthetic Data**: All categories, codes, and items are simulated test data.
+   - **Zero Clinical Triage**: The tool does not diagnose conditions, interpret symptoms, or recommend treatment.
+   - **Zero Eligibility Adjudication**: The tool cannot evaluate or confirm scheme eligibility or coverage.
+   - **Prototype Limitation**: A "no-match" outcome reflects an academic database scope boundary, not public support unavailability.
+   - **External Official Action**: All confirmations and claims must occur through official statutory channels outside this tool.
+4. **Mandatory Retesting on Ambiguity**: If any participant exhibits misunderstanding regarding eligibility, coverage, clinical triage, hospital bed/treatment availability, or legal entitlement, the capstone team must:
+   - Document the specific misunderstanding in `docs/usability_findings.md`.
+   - Formulate and implement required UI copy and layout modifications.
+   - Retest with new participants until a clean run of at least 3 sessions with zero misunderstandings is achieved.
 
 ---
 

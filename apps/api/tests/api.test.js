@@ -245,19 +245,15 @@ describe('Healthcare Access Guidance API - Unified Integration Test Suite', () =
   });
 
   test('GET /api/admin/analytics/summary returns operational telemetry', async () => {
-    // Uses Authorization header or demo bypass
-    const res = await request(app)
-      .get('/api/admin/analytics/summary')
-      .set('Authorization', 'Bearer demo-admin-token');
+    // Relies on local demo bypass (ALLOW_UNAUTHENTICATED_ADMIN_DEMO=true)
+    const res = await request(app).get('/api/admin/analytics/summary');
     expect(res.statusCode).toEqual(200);
     expect(res.body.total_sessions).toBeGreaterThanOrEqual(1);
     expect(res.body.completion_rate_percent).toBeDefined();
   });
 
   test('GET /api/admin/analytics/data-quality returns data quality audit ledger', async () => {
-    const res = await request(app)
-      .get('/api/admin/analytics/data-quality')
-      .set('Authorization', 'Bearer demo-admin-token');
+    const res = await request(app).get('/api/admin/analytics/data-quality');
     expect(res.statusCode).toEqual(200);
     expect(res.body.total_issues).toBeDefined();
     expect(Array.isArray(res.body.issues_by_severity)).toBe(true);
