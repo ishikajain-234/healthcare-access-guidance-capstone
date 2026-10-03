@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const adminAnalyticsController = require('../controllers/adminAnalyticsController');
+const requireAdmin = require('../middleware/requireAdmin');
 
 /**
  * SECURITY WARNING:
- * All endpoints under /api/admin/* are currently unauthenticated ONLY for local academic
- * demonstration and evaluation. Before any staging or production deployment, robust
- * role-based authorization (e.g. JWT with an explicit ADMIN role verification middleware)
- * MUST be enforced to restrict access to operational telemetry and data quality logs.
+ * All endpoints under /api/admin/* are protected by the requireAdmin authorization boundary.
+ * For local academic demonstration, ALLOW_UNAUTHENTICATED_ADMIN_DEMO=true may be set in .env.
+ * THIS BYPASS MUST NEVER BE ENABLED IN STAGING OR PRODUCTION.
  */
+router.use(requireAdmin);
 
 // GET /api/admin/analytics/summary
 router.get('/summary', adminAnalyticsController.getSummary);

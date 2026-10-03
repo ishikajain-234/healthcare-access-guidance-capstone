@@ -51,3 +51,24 @@ All user interfaces and API responses strictly enforce conditional language:
 * *“Public reference information suggests...”*
 * *“Official verification through an authorized channel is required...”*
 * *“This tool does not confirm eligibility, coverage, approval, hospital availability, or cashless treatment.”*
+
+---
+
+## 5. Admin Route Authorization Boundary (Phase 2 Hardening)
+1. **Protected Surface**: All endpoints under `/api/admin/*` (`/api/admin/analytics/summary`, `/api/admin/analytics/data-quality`) are strictly guarded by `requireAdmin` middleware.
+2. **Local Demonstration Bypass**: For local developer and academic evaluator execution only, an explicit environment setting `ALLOW_UNAUTHENTICATED_ADMIN_DEMO=true` can be enabled.
+3. **Deployment Prohibition**: The local demonstration bypass is strictly prohibited from being enabled in any staging, production, or multi-tenant environment.
+4. **Non-Bypass Enforcement**: In non-bypass mode (`ALLOW_UNAUTHENTICATED_ADMIN_DEMO=false` or omitted):
+   * Unauthenticated requests (missing token or header) are rejected with **HTTP 401 UNAUTHORIZED**.
+   * Authenticated non-admin user tokens are rejected with **HTTP 403 FORBIDDEN**.
+   * Admin-authorized tokens pass with **HTTP 200 OK**.
+5. **Zero-PII Credential Policy**: No passwords, personal credentials, or identity documents are stored in the database to support authorization; mock bearer tokens are evaluated for prototype verification.
+
+---
+
+## 6. Source-Verification Gate (Phase 3 Pre-Condition)
+1. **Strict Prohibition on Ingesting Unverified External Data**: No real government benefit packages, hospital tariff lists, or external portals may be integrated until 100% of the 13 gate conditions defined in [source_verification_gate.md](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/source_verification_gate.md) are satisfied.
+2. **Statutory Provenance**: Real reference data must originate exclusively from official `.gov.in` statutory public domains, verified document titles, and confirmed release versions.
+3. **Dual-Signoff Manual Review**: All extracted fields must be manually audited to guarantee that clinical criteria, diagnosis rules, pre-authorization guidelines, and hospital tariffs are completely stripped before persistence.
+4. **Fallback Safety Protocol**: If external files fail parsing or hash verification, the prototype must default to the controlled synthetic recovery path (`PUBLIC_REFERENCE_NOT_FOUND` / `SUPPORT_ROUTE_SHOWN`) rather than emitting unverified or partial data.
+

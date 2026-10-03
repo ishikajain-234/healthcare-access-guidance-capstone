@@ -245,16 +245,116 @@ describe('Healthcare Access Guidance API - Unified Integration Test Suite', () =
   });
 
   test('GET /api/admin/analytics/summary returns operational telemetry', async () => {
-    const res = await request(app).get('/api/admin/analytics/summary');
+    // Uses Authorization header or demo bypass
+    const res = await request(app)
+      .get('/api/admin/analytics/summary')
+      .set('Authorization', 'Bearer demo-admin-token');
     expect(res.statusCode).toEqual(200);
     expect(res.body.total_sessions).toBeGreaterThanOrEqual(1);
     expect(res.body.completion_rate_percent).toBeDefined();
   });
 
   test('GET /api/admin/analytics/data-quality returns data quality audit ledger', async () => {
-    const res = await request(app).get('/api/admin/analytics/data-quality');
+    const res = await request(app)
+      .get('/api/admin/analytics/data-quality')
+      .set('Authorization', 'Bearer demo-admin-token');
     expect(res.statusCode).toEqual(200);
     expect(res.body.total_issues).toBeDefined();
     expect(Array.isArray(res.body.issues_by_severity)).toBe(true);
+  });
+
+  // =========================================================================
+  // WORKSTREAM 1 ADDITIONAL VERIFICATION: PROHIBITED PERSONAL / CLINICAL KEYS
+  // =========================================================================
+
+  test('POST /api/guidance/sessions rejects prohibited identity keys (aadhaar, phone, name) with HTTP 400', async () => {
+    const prohibitedPayloads = [
+      { aadhaar: '123456789012' },
+      { phone: '+919876543210' },
+      { name: 'Test Patient' },
+      { abha_id: 'test@abdm' },
+    ];
+
+    for (const payload of prohibitedPayloads) {
+      const res = await request(app)
+        .post('/api/guidance/sessions')
+        .send(payload);
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.error_code).toBe('UNSUPPORTED_INPUT');
+    }
+  });
+
+  test('POST /api/guidance/search rejects prohibited clinical keys (diagnosis, triage, prescription) with HTTP 400', async () => {
+    const prohibitedPayloads = [
+      { session_id: activeSessionId, category_id: 'DEMO_ALPHA', diagnosis: 'acute gastritis' },
+      { session_id: activeSessionId, category_id: 'DEMO_ALPHA', triage_score: 3 },
+      { session_id: activeSessionId, category_id: 'DEMO_ALPHA', prescription: 'paracetamol' },
+    ];
+
+    for (const payload of prohibitedPayloads) {
+      const res = await request(app)
+        .post('/api/guidance/search')
+        .send(payload);
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.error_code).toBe('UNSUPPORTED_INPUT');
+    }
+  });
+
+  // =========================================================================
+  // WORKSTREAM 2: ADMIN AUTHORIZATION BOUNDARY (/api/admin/*)
+  // =========================================================================
+
+  describe('Workstream 2: Admin Route Authorization Boundary', () => {
+    const originalBypass = process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO;
+
+    afterAll(() => {
+      process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO = originalBypass;
+    });
+
+    test('1. Local demo bypass enabled: unauthenticated request succeeds with HTTP 200', async () => {
+      process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO = 'true';
+      const res = await request(app).get('/api/admin/analytics/summary');
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.total_sessions).toBeDefined();
+    });
+
+    test('2. Bypass disabled: unauthenticated request returns HTTP 401 UNAUTHORIZED', async () => {
+      process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO = 'false';
+      const res = await request(app).get('/api/admin/analytics/summary');
+      expect(res.statusCode).toEqual(401);
+      expect(res.body.error_code).toBe('UNAUTHORIZED');
+      expect(res.body.message).toContain('Authentication required');
+    });
+
+    test('3. Bypass disabled: authenticated non-admin user returns HTTP 403 FORBIDDEN', async () => {
+      process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO = 'false';
+      const res = await request(app)
+        .get('/api/admin/analytics/summary')
+        .set('Authorization', 'Bearer demo-user-token');
+      expect(res.statusCode).toEqual(403);
+      expect(res.body.error_code).toBe('FORBIDDEN');
+      expect(res.body.message).toContain('Admin authorization required');
+    });
+
+    test('4. Bypass disabled: admin-authorized request returns HTTP 200 OK', async () => {
+      process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO = 'false';
+      const res = await request(app)
+        .get('/api/admin/analytics/summary')
+        .set('Authorization', 'Bearer demo-admin-token');
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.total_sessions).toBeDefined();
+    });
+
+    test('5. Bypass disabled: invalid or unrecognized token returns HTTP 401 UNAUTHORIZED', async () => {
+      process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO = 'false';
+      const res = await request(app)
+        .get('/api/admin/analytics/summary')
+        .set('Authorization', 'Bearer invalid-token-xyz');
+      expect(res.statusCode).toEqual(401);
+      expect(res.body.error_code).toBe('UNAUTHORIZED');
+      expect(res.body.message).toContain('Invalid or unrecognized authorization token');
+    });
   });
 });

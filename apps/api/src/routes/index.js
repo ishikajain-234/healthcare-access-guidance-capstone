@@ -6,6 +6,7 @@ const guidanceSessions = require('./guidanceSessions');
 const referencePackages = require('./referencePackages');
 const officialSupportRoutes = require('./officialSupportRoutes');
 const adminAnalytics = require('./adminAnalytics');
+const requireAdmin = require('../middleware/requireAdmin');
 
 // GET /api/health
 router.get('/health', (req, res) => {
@@ -43,10 +44,12 @@ router.use('/reference-packages', referencePackages);
 // GET /api/official-support-routes
 router.use('/official-support-routes', officialSupportRoutes);
 
-// Admin Analytics:
-// WARNING: /api/admin/* is unauthenticated only for local demonstration and must use role-based authorization before deployment.
+// Admin Routes:
+// Protected by requireAdmin authorization boundary.
+// For local demonstration only, ALLOW_UNAUTHENTICATED_ADMIN_DEMO=true enables bypass.
 // GET /api/admin/analytics/summary
 // GET /api/admin/analytics/data-quality
+router.use('/admin', requireAdmin);
 router.use('/admin/analytics', adminAnalytics);
 
 module.exports = router;
