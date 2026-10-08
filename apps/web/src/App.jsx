@@ -1,133 +1,135 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
-import DisclaimerBanner from './components/DisclaimerBanner';
-import LandingPage from './pages/LandingPage';
-import CategorySelectionPage from './pages/CategorySelectionPage';
-import ReferenceFoundPage from './pages/ReferenceFoundPage';
-import ReferenceNotFoundPage from './pages/ReferenceNotFoundPage';
-import OfficialRoutePage from './pages/OfficialRoutePage';
-import CompletionPage from './pages/CompletionPage';
-import AdminAnalyticsPage from './pages/AdminAnalyticsPage';
+import React, { useState, useEffect } from 'react';
+import AppShell from './components/layout/AppShell';
+import DashboardPage from './pages/operations/DashboardPage';
+import OpdQueuePage from './pages/operations/OpdQueuePage';
+import BedsPage from './pages/operations/BedsPage';
+import AdmissionsPage from './pages/operations/AdmissionsPage';
+import InventoryPage from './pages/operations/InventoryPage';
+import AnalyticsPage from './pages/operations/AnalyticsPage';
+import CityOverviewPage from './pages/operations/CityOverviewPage';
+import CitizenGuidanceWrapper from './pages/guidance/CitizenGuidanceWrapper';
+import { getHospitals, getHealth } from './services/api';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('LANDING'); // LANDING, CATEGORY, FOUND, NOT_FOUND, ROUTE, COMPLETION, ADMIN
-  const [session, setSession] = useState(null);
-  const [referenceData, setReferenceData] = useState(null);
-  const [searchCategory, setSearchCategory] = useState(null);
+  // Navigation states: DASHBOARD, OPD_QUEUE, BEDS, ADMISSIONS, INVENTORY, ANALYTICS, CITY_OVERVIEW, CITIZEN_GUIDANCE, GUIDANCE_ADMIN
+  const [currentView, setCurrentView] = useState('DASHBOARD');
+  const [hospitals, setHospitals] = useState([]);
+  const [selectedHospitalId, setSelectedHospitalId] = useState('');
+  const [systemStatus, setSystemStatus] = useState('CHECKING');
+  const [initialLoading, setInitialLoading] = useState(true);
 
-  const handleSessionStarted = (newSession) => {
-    setSession(newSession);
-    setCurrentView('CATEGORY');
-  };
+  // Initialize facilities and health check
+  useEffect(() => {
+    async function initPlatform() {
+      try {
+        const [healthRes, hospRes] = await Promise.all([
+          getHealth().catch(() => ({ status: 'CONNECTING' })),
+          getHospitals().catch(() => ({ hospitals: [] })),
+        ]);
 
-  const handleSearchSuccess = (updatedSession, record) => {
-    setSession(updatedSession);
-    setReferenceData(record);
-    setCurrentView('FOUND');
-  };
+        setSystemStatus(healthRes.status === 'HEALTHY' ? 'HEALTHY' : 'CONNECTING');
 
-  const handleSearchNotFound = (updatedSession, categoryId) => {
-    setSession(updatedSession);
-    setSearchCategory(categoryId);
-    setReferenceData(null);
-    setCurrentView('NOT_FOUND');
-  };
+        const hospList = hospRes.hospitals || [];
+        setHospitals(hospList);
+        if (hospList.length > 0) {
+          setSelectedHospitalId(hospList[0].hospital_id);
+        }
+      } catch (err) {
+        console.error('Initialization error:', err);
+      } finally {
+        setInitialLoading(false);
+      }
+    }
 
-  const handleProceedToOfficialRoute = (updatedSession) => {
-    setSession(updatedSession);
-    setCurrentView('ROUTE');
-  };
+    initPlatform();
+  }, []);
 
-  const handleCompletion = (updatedSession) => {
-    setSession(updatedSession);
-    setCurrentView('COMPLETION');
-  };
-
-  const handleResetSession = () => {
-    setSession(null);
-    setReferenceData(null);
-    setSearchCategory(null);
-    setCurrentView('LANDING');
-  };
+  const selectedHospital = hospitals.find((h) => h.hospital_id === selectedHospitalId);
+  const hospitalName = selectedHospital?.hospital_name || selectedHospitalId;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100 text-slate-900 font-sans">
-      <DisclaimerBanner />
-      <Header
-        currentSession={session}
-        currentView={currentView}
-        onNavigateAdmin={() => setCurrentView('ADMIN')}
-        onNavigateHome={handleResetSession}
-      />
+    <AppShell
+      currentView={currentView}
+      onNavigate={setCurrentView}
+      hospitals={hospitals}
+      selectedHospitalId={selectedHospitalId}
+      onSelectHospital={setSelectedHospitalId}
+      systemStatus={systemStatus}
+    >
+      {/* 1. Dashboard Page */}
+      {currentView === 'DASHBOARD' && (
+        <DashboardPage
+          hospitalId={selectedHospitalId}
+          hospitalName={hospitalName}
+          onNavigate={setCurrentView}
+        />
+      )}
 
-      <main className="flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 lg:p-8">
-        {currentView === 'ADMIN' && (
-          <div>
-            <div className="mb-4">
-              <button
-                onClick={() => setCurrentView(session ? 'CATEGORY' : 'LANDING')}
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1"
-              >
-                <span>&larr; Back to Guidance Flow</span>
-              </button>
-            </div>
-            <AdminAnalyticsPage />
-          </div>
-        )}
+      {/* 2. OPD Queue Management */}
+      {currentView === 'OPD_QUEUE' && (
+        <OpdQueuePage
+          hospitalId={selectedHospitalId}
+          hospitalName={hospitalName}
+        />
+      )}
 
-        {currentView === 'LANDING' && (
-          <LandingPage
-            onSessionStarted={handleSessionStarted}
-            onNavigateAdmin={() => setCurrentView('ADMIN')}
-          />
-        )}
+      {/* 3. Inpatient Beds Management */}
+      {currentView === 'BEDS' && (
+        <BedsPage
+          hospitalId={selectedHospitalId}
+          hospitalName={hospitalName}
+        />
+      )}
 
-        {currentView === 'CATEGORY' && (
-          <CategorySelectionPage
-            session={session}
-            onSearchSuccess={handleSearchSuccess}
-            onSearchNotFound={handleSearchNotFound}
-          />
-        )}
+      {/* 4. Inpatient Admissions Management */}
+      {currentView === 'ADMISSIONS' && (
+        <AdmissionsPage
+          hospitalId={selectedHospitalId}
+          hospitalName={hospitalName}
+        />
+      )}
 
-        {currentView === 'FOUND' && (
-          <ReferenceFoundPage
-            session={session}
-            record={referenceData}
-            onProceed={handleProceedToOfficialRoute}
-          />
-        )}
+      {/* 5. Essential Inventory */}
+      {currentView === 'INVENTORY' && (
+        <InventoryPage
+          hospitalId={selectedHospitalId}
+          hospitalName={hospitalName}
+        />
+      )}
 
-        {currentView === 'NOT_FOUND' && (
-          <ReferenceNotFoundPage
-            session={session}
-            categoryId={searchCategory}
-            onProceed={handleProceedToOfficialRoute}
-          />
-        )}
+      {/* 6. Operations & M/M/c Analytics */}
+      {currentView === 'ANALYTICS' && (
+        <AnalyticsPage
+          hospitalId={selectedHospitalId}
+          hospitalName={hospitalName}
+        />
+      )}
 
-        {currentView === 'ROUTE' && (
-          <OfficialRoutePage
-            session={session}
-            record={referenceData}
-            onComplete={handleCompletion}
-          />
-        )}
+      {/* 7. City Overview Snapshot */}
+      {currentView === 'CITY_OVERVIEW' && (
+        <CityOverviewPage
+          onSelectHospital={(id) => {
+            setSelectedHospitalId(id);
+            setCurrentView('DASHBOARD');
+          }}
+        />
+      )}
 
-        {currentView === 'COMPLETION' && (
-          <CompletionPage
-            session={session}
-            onRestart={handleResetSession}
-          />
-        )}
-      </main>
+      {/* 8. Citizen Access Guidance Flow (Preserved) */}
+      {currentView === 'CITIZEN_GUIDANCE' && (
+        <CitizenGuidanceWrapper
+          initialView="LANDING"
+          onBackToOperations={() => setCurrentView('DASHBOARD')}
+        />
+      )}
 
-      <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
-        <p>Healthcare Access Guidance Prototype &bull; Academic 2nd-Year Capstone Demonstration</p>
-        <p className="text-[11px] text-slate-400 mt-1">
-          Synthetic demonstration data only. Not affiliated with NHA, PM-JAY, or any hospital authority.
-        </p>
-      </footer>
-    </div>
+      {/* 9. Citizen Guidance Admin Audit Ledger (Preserved) */}
+      {currentView === 'GUIDANCE_ADMIN' && (
+        <CitizenGuidanceWrapper
+          initialView="ADMIN"
+          onBackToOperations={() => setCurrentView('DASHBOARD')}
+        />
+      )}
+    </AppShell>
   );
 }
