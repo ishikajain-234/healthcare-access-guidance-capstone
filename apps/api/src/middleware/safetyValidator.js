@@ -44,7 +44,30 @@ function validateParams(schema) {
   };
 }
 
+function validateQuery(schema) {
+  return (req, res, next) => {
+    try {
+      req.query = schema.parse(req.query || {});
+      next();
+    } catch (err) {
+      if (err.name === 'ZodError') {
+        const errorDetails = err.errors.map((e) => ({
+          field: e.path.join('.'),
+          message: e.message,
+        }));
+        return res.status(400).json({
+          error_code: 'UNSUPPORTED_INPUT',
+          message: 'Query parameter validation failed. Ensure no extra, invalid, or out-of-range parameters are present.',
+          details: errorDetails,
+        });
+      }
+      next(err);
+    }
+  };
+}
+
 module.exports = {
   validateBody,
   validateParams,
+  validateQuery,
 };

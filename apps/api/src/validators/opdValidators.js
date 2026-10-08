@@ -83,6 +83,25 @@ const listTokensQuerySchema = z
   })
   .strict();
 
+const opdAnalyticsQuerySchema = z
+  .object({
+    hospital_id: z.string().trim().min(1, 'hospital_id is required').max(64),
+    department_id: z.string().trim().min(1, 'department_id is required').max(64),
+    lambda: z.preprocess((val) => {
+      if (val === undefined || val === '') return 30;
+      const parsed = Number(val);
+      return isNaN(parsed) ? val : parsed;
+    }, z.number({ invalid_type_error: 'lambda must be a valid number' })
+       .positive({ message: 'lambda must be greater than zero' })),
+    mu: z.preprocess((val) => {
+      if (val === undefined || val === '') return 8;
+      const parsed = Number(val);
+      return isNaN(parsed) ? val : parsed;
+    }, z.number({ invalid_type_error: 'mu must be a valid number' })
+       .positive({ message: 'mu must be greater than zero' })),
+  })
+  .strict();
+
 module.exports = {
   checkProhibitedKeys,
   hospitalIdParamSchema,
@@ -93,4 +112,5 @@ module.exports = {
   completeTokenSchema,
   cancelTokenSchema,
   listTokensQuerySchema,
+  opdAnalyticsQuerySchema,
 };

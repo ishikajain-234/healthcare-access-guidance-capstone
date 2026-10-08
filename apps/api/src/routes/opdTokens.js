@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const opdTokenController = require('../controllers/opdTokenController');
-const { validateBody, validateParams } = require('../middleware/safetyValidator');
+const opdAnalyticsController = require('../controllers/opdAnalyticsController');
+const { validateBody, validateParams, validateQuery } = require('../middleware/safetyValidator');
 const {
   tokenIdParamSchema,
   createTokenSchema,
@@ -9,7 +10,15 @@ const {
   startTokenSchema,
   completeTokenSchema,
   cancelTokenSchema,
+  opdAnalyticsQuerySchema,
 } = require('../validators/opdValidators');
+
+// GET /api/opd/analytics - Query queue operational analytics & M/M/c theoretical benchmark
+router.get(
+  '/analytics',
+  validateQuery(opdAnalyticsQuerySchema),
+  opdAnalyticsController.getAnalytics
+);
 
 // POST /api/opd/tokens - Create anonymous OPD token
 router.post(
