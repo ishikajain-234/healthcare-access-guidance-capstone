@@ -176,3 +176,36 @@ Time:        1.018 s
 | *Pending* | *[Team Member 1]* | [ ] Local :5001/:5173 | [ ] Yes / [ ] No | [ ] Yes / [ ] No | [ ] Yes / [ ] No | [ ] Yes / [ ] No | ____________ |
 | *Pending* | *[Team Member 2]* | [ ] Local :5001/:5173 | [ ] Yes / [ ] No | [ ] Yes / [ ] No | [ ] Yes / [ ] No | [ ] Yes / [ ] No | ____________ |
 | *Pending* | *[Faculty Evaluator]*| [ ] Local :5001/:5173 | [ ] Yes / [ ] No | [ ] Yes / [ ] No | [ ] Yes / [ ] No | [ ] Yes / [ ] No | ____________ |
+
+## Phase 2 admin authorization verification
+
+Environment:
+
+```env
+ALLOW_UNAUTHENTICATED_ADMIN_DEMO=false
+```
+
+### Test results
+
+| Request | Expected HTTP status | Actual HTTP status | Result |
+|---|---:|---:|---|
+| No Authorization header | 401 | 401 | Pass |
+| Bearer demo-user-token | 403 | 403 | Pass |
+| Bearer demo-admin-token | 200 | 200 | Pass |
+| Bearer invalid-token-xyz | 401 | 401 | Pass |
+
+### Interpretation
+
+- Unauthenticated requests are rejected with HTTP 401.
+- Authenticated non-admin requests are rejected with HTTP 403.
+- Admin-token requests are allowed with HTTP 200.
+- Invalid tokens are rejected with HTTP 401.
+- The admin authorization boundary is functioning correctly when the local demo bypass is disabled.
+
+### Scope note
+
+This authorization test uses local demonstration tokens only. It does not involve passwords, Aadhaar, ABHA, patient profiles, or real government-system authentication.
+
+### Test environment note
+
+The backend must remain running while authorization tests are executed. An initial HTTP 000 result occurred because the backend had been stopped before running the curl commands. After restarting the backend, all four authorization tests passed.
