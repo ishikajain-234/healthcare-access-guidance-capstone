@@ -28,7 +28,7 @@ export default function AppShell({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'DASHBOARD', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'DASHBOARD', label: 'Operations Console', icon: LayoutDashboard },
     { id: 'OPD_QUEUE', label: 'OPD Queue', icon: Users },
     { id: 'BEDS', label: 'Beds', icon: BedDouble },
     { id: 'ADMISSIONS', label: 'Admissions', icon: ClipboardList },

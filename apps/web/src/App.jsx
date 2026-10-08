@@ -56,11 +56,13 @@ export default function App() {
       onSelectHospital={setSelectedHospitalId}
       systemStatus={systemStatus}
     >
-      {/* 1. Dashboard Page */}
+      {/* 1. Dashboard / Staff Operations Console */}
       {currentView === 'DASHBOARD' && (
         <DashboardPage
           hospitalId={selectedHospitalId}
           hospitalName={hospitalName}
+          hospitals={hospitals}
+          onSelectHospital={setSelectedHospitalId}
           onNavigate={setCurrentView}
         />
       )}
