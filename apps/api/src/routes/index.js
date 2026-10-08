@@ -10,6 +10,7 @@ const hospitals = require('./hospitals');
 const opdTokens = require('./opdTokens');
 const beds = require('./beds');
 const admissions = require('./admissions');
+const inventory = require('./inventory');
 
 // GET /api/health
 router.get('/health', (req, res) => {
@@ -88,5 +89,18 @@ router.use('/beds', beds);
 // POST /api/admissions/:admissionId/discharge
 // POST /api/admissions/:admissionId/cancel
 router.use('/admissions', admissions);
+
+// Inventory Management Routes (PS-75):
+// GET  /api/inventory/items
+// GET  /api/inventory/items/:itemId
+// GET  /api/inventory/availability
+// POST /api/inventory/items/:itemId/receive
+// POST /api/inventory/items/:itemId/issue
+// POST /api/inventory/items/:itemId/adjust
+// POST /api/inventory/items/:itemId/transfer-in
+// POST /api/inventory/items/:itemId/transfer-out
+// GET  /api/inventory/transactions
+// GET  /api/inventory/items/:itemId/transactions
+router.use('/inventory', inventory);
 
 module.exports = router;

@@ -491,3 +491,116 @@ export const admitPatient = (admissionId) => postAdmissionAction(admissionId, 'a
 export const dischargePatient = (admissionId) => postAdmissionAction(admissionId, 'discharge');
 export const cancelAdmission = (admissionId) => postAdmissionAction(admissionId, 'cancel');
 
+/* ==========================================================================
+   Inventory & Supply Chain Services (PS-75)
+   ========================================================================== */
+
+/**
+ * List inventory items
+ * GET /api/inventory/items
+ */
+export async function getInventoryItems({ hospital_id, item_type, stock_status, is_active, limit = 50, offset = 0 } = {}) {
+  const params = new URLSearchParams();
+  if (hospital_id) params.set('hospital_id', hospital_id);
+  if (item_type) params.set('item_type', item_type);
+  if (stock_status) params.set('stock_status', stock_status);
+  if (is_active !== undefined) params.set('is_active', String(is_active));
+  if (limit) params.set('limit', limit);
+  if (offset) params.set('offset', offset);
+
+  const res = await fetch(`${BASE_URL}/inventory/items?${params.toString()}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch inventory items (${res.status})`);
+  }
+  return res.json();
+}
+
+/**
+ * Get individual inventory item
+ * GET /api/inventory/items/:itemId
+ */
+export async function getInventoryItem(itemId) {
+  const res = await fetch(`${BASE_URL}/inventory/items/${encodeURIComponent(itemId)}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch inventory item (${res.status})`);
+  }
+  return res.json();
+}
+
+/**
+ * Get operational inventory stock availability summary
+ * GET /api/inventory/availability
+ */
+export async function getInventoryAvailability({ hospital_id } = {}) {
+  const params = new URLSearchParams();
+  if (hospital_id) params.set('hospital_id', hospital_id);
+
+  const res = await fetch(`${BASE_URL}/inventory/availability?${params.toString()}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch inventory availability (${res.status})`);
+  }
+  return res.json();
+}
+
+async function postInventoryAction(itemId, action, payload = {}) {
+  const res = await fetch(`${BASE_URL}/inventory/items/${encodeURIComponent(itemId)}/${action}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const error = new Error(err.message || `Inventory action '${action}' failed (${res.status})`);
+    error.errorCode = err.error_code;
+    throw error;
+  }
+  return res.json();
+}
+
+export const receiveStock = (itemId, payload) => postInventoryAction(itemId, 'receive', payload);
+export const issueStock = (itemId, payload) => postInventoryAction(itemId, 'issue', payload);
+export const adjustStock = (itemId, payload) => postInventoryAction(itemId, 'adjust', payload);
+export const transferInStock = (itemId, payload) => postInventoryAction(itemId, 'transfer-in', payload);
+export const transferOutStock = (itemId, payload) => postInventoryAction(itemId, 'transfer-out', payload);
+
+/**
+ * List inventory transactions
+ * GET /api/inventory/transactions
+ */
+export async function getInventoryTransactions({ hospital_id, item_id, transaction_type, limit = 50, offset = 0 } = {}) {
+  const params = new URLSearchParams();
+  if (hospital_id) params.set('hospital_id', hospital_id);
+  if (item_id) params.set('item_id', item_id);
+  if (transaction_type) params.set('transaction_type', transaction_type);
+  if (limit) params.set('limit', limit);
+  if (offset) params.set('offset', offset);
+
+  const res = await fetch(`${BASE_URL}/inventory/transactions?${params.toString()}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch inventory transactions (${res.status})`);
+  }
+  return res.json();
+}
+
+/**
+ * Get transactions for a specific item
+ * GET /api/inventory/items/:itemId/transactions
+ */
+export async function getItemTransactions(itemId, { limit = 50, offset = 0 } = {}) {
+  const params = new URLSearchParams();
+  if (limit) params.set('limit', limit);
+  if (offset) params.set('offset', offset);
+
+  const res = await fetch(`${BASE_URL}/inventory/items/${encodeURIComponent(itemId)}/transactions?${params.toString()}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch item transactions (${res.status})`);
+  }
+  return res.json();
+}
+
+
