@@ -8,6 +8,8 @@ const officialSupportRoutes = require('./officialSupportRoutes');
 const adminAnalytics = require('./adminAnalytics');
 const hospitals = require('./hospitals');
 const opdTokens = require('./opdTokens');
+const beds = require('./beds');
+const admissions = require('./admissions');
 
 // GET /api/health
 router.get('/health', (req, res) => {
@@ -65,5 +67,26 @@ router.use('/hospitals', hospitals);
 // POST /api/opd/tokens/:tokenId/complete
 // POST /api/opd/tokens/:tokenId/cancel
 router.use('/opd', opdTokens);
+
+// Bed State Transition Routes (PS-75):
+// POST /api/beds/:bedId/reserve
+// POST /api/beds/:bedId/occupy
+// POST /api/beds/:bedId/clean
+// POST /api/beds/:bedId/release
+// POST /api/beds/:bedId/out-of-service
+// POST /api/beds/:bedId/restore
+router.use('/beds', beds);
+
+// Inpatient Admission Coordination Routes (PS-75):
+// POST /api/admissions
+// GET  /api/admissions
+// GET  /api/admissions/:admissionId
+// POST /api/admissions/:admissionId/pending-review
+// POST /api/admissions/:admissionId/assign-bed
+// POST /api/admissions/:admissionId/confirm
+// POST /api/admissions/:admissionId/admit
+// POST /api/admissions/:admissionId/discharge
+// POST /api/admissions/:admissionId/cancel
+router.use('/admissions', admissions);
 
 module.exports = router;
