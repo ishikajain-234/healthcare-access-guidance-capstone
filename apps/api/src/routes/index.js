@@ -6,6 +6,8 @@ const guidanceSessions = require('./guidanceSessions');
 const referencePackages = require('./referencePackages');
 const officialSupportRoutes = require('./officialSupportRoutes');
 const adminAnalytics = require('./adminAnalytics');
+const hospitals = require('./hospitals');
+const opdTokens = require('./opdTokens');
 
 // GET /api/health
 router.get('/health', (req, res) => {
@@ -49,5 +51,19 @@ router.use('/official-support-routes', officialSupportRoutes);
 // GET /api/admin/analytics/summary
 // GET /api/admin/analytics/data-quality
 router.use('/admin/analytics', adminAnalytics);
+
+// Hospital & Department Routes (PS-75):
+// GET /api/hospitals
+// GET /api/hospitals/:hospitalId/departments
+router.use('/hospitals', hospitals);
+
+// OPD Token Management Routes (PS-75):
+// POST /api/opd/tokens
+// GET  /api/opd/tokens
+// POST /api/opd/tokens/:tokenId/call
+// POST /api/opd/tokens/:tokenId/start
+// POST /api/opd/tokens/:tokenId/complete
+// POST /api/opd/tokens/:tokenId/cancel
+router.use('/opd', opdTokens);
 
 module.exports = router;
