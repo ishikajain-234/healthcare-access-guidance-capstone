@@ -603,4 +603,39 @@ export async function getItemTransactions(itemId, { limit = 50, offset = 0 } = {
   return res.json();
 }
 
+/**
+ * Get latest city-wide aggregate overview (Table #17 city_aggregate_snapshot)
+ * GET /api/city/overview
+ */
+export async function getCityOverview() {
+  const res = await fetch(`${BASE_URL}/city/overview`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch city overview (${res.status})`);
+  }
+  return res.json();
+}
+
+/**
+ * Query historical city aggregate snapshots
+ * GET /api/city/snapshots
+ */
+export async function getCitySnapshots(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.period) params.set('period', filters.period);
+  if (filters.level) params.set('level', filters.level);
+  if (filters.hospital_id) params.set('hospital_id', filters.hospital_id);
+  if (filters.department_id) params.set('department_id', filters.department_id);
+  if (filters.limit) params.set('limit', filters.limit);
+
+  const query = params.toString();
+  const url = query ? `${BASE_URL}/city/snapshots?${query}` : `${BASE_URL}/city/snapshots`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `Failed to fetch city snapshots (${res.status})`);
+  }
+  return res.json();
+}
+
 

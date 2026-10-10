@@ -103,4 +103,11 @@ router.use('/admissions', admissions);
 // GET  /api/inventory/items/:itemId/transactions
 router.use('/inventory', inventory);
 
+const citySnapshots = require('./citySnapshots');
+
+// Mount city aggregate snapshots (Table #17):
+// GET /api/city/overview
+// GET /api/city/snapshots
+router.use('/city', citySnapshots);
+
 module.exports = router;
