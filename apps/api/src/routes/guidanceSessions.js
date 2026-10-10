@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const guidanceSessionController = require('../controllers/guidanceSessionController');
 const { validateBody, validateParams } = require('../middleware/safetyValidator');
+const { createRateLimiter } = require('../middleware/rateLimiter');
 const {
   createSessionSchema,
   searchCategorySchema,
@@ -11,9 +12,12 @@ const {
   sessionIdParamSchema,
 } = require('../validators/sessionValidators');
 
+const sessionRateLimiter = createRateLimiter({ max: 100, windowMs: 15 * 60 * 1000 });
+
 // POST /api/guidance/sessions
 router.post(
   '/sessions',
+  sessionRateLimiter,
   validateBody(createSessionSchema),
   guidanceSessionController.createSession
 );

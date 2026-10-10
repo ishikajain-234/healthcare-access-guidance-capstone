@@ -24,6 +24,12 @@ const ALLOWED_ADMIN_TOKENS = new Set([
   'admin-token',
 ]);
 
+const ALLOWED_STAFF_TOKENS = new Set([
+  'demo-staff-token',
+  'mock-staff-token',
+  'staff-token',
+]);
+
 const ALLOWED_USER_TOKENS = new Set([
   'demo-user-token',
   'mock-user-token',
@@ -32,7 +38,9 @@ const ALLOWED_USER_TOKENS = new Set([
 
 function requireAdmin(req, res, next) {
   // 1. Check for explicit environment-controlled local demonstration bypass
-  const allowBypass = process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO === 'true';
+  // CRITICAL: Demo bypass MUST NEVER be active in production mode.
+  const isProduction = process.env.NODE_ENV === 'production';
+  const allowBypass = !isProduction && process.env.ALLOW_UNAUTHENTICATED_ADMIN_DEMO === 'true';
 
   if (allowBypass) {
     // SECURITY WARNING: Local demo bypass active
@@ -69,6 +77,13 @@ function requireAdmin(req, res, next) {
       auth_method: 'DEMO_BEARER_TOKEN',
     };
     return next();
+  }
+
+  if (ALLOWED_STAFF_TOKENS.has(token)) {
+    return res.status(403).json({
+      error_code: 'FORBIDDEN',
+      message: 'Admin authorization required. Hospital staff role does not possess administrative privileges.',
+    });
   }
 
   if (ALLOWED_USER_TOKENS.has(token)) {

@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const bedController = require('../controllers/bedController');
 const { validateParams, validateBody } = require('../middleware/safetyValidator');
+const requireStaff = require('../middleware/requireStaff');
 const { bedIdParamSchema, emptyOrReasonSchema } = require('../validators/bedValidators');
+
+// Operational staff authorization boundary for all bed state transitions
+router.use(requireStaff);
 
 // POST /api/beds/:bedId/reserve (AVAILABLE -> RESERVED)
 router.post(

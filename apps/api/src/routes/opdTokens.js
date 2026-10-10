@@ -3,6 +3,7 @@ const router = express.Router();
 const opdTokenController = require('../controllers/opdTokenController');
 const opdAnalyticsController = require('../controllers/opdAnalyticsController');
 const { validateBody, validateParams, validateQuery } = require('../middleware/safetyValidator');
+const requireStaff = require('../middleware/requireStaff');
 const {
   tokenIdParamSchema,
   createTokenSchema,
@@ -36,6 +37,7 @@ router.get(
 // POST /api/opd/tokens/:tokenId/call - Call token to counter (WAITING -> CALLED)
 router.post(
   '/tokens/:tokenId/call',
+  requireStaff,
   validateParams(tokenIdParamSchema),
   validateBody(callTokenSchema),
   opdTokenController.callToken
@@ -44,6 +46,7 @@ router.post(
 // POST /api/opd/tokens/:tokenId/start - Start service (CALLED -> IN_SERVICE)
 router.post(
   '/tokens/:tokenId/start',
+  requireStaff,
   validateParams(tokenIdParamSchema),
   validateBody(startTokenSchema),
   opdTokenController.startService
@@ -52,6 +55,7 @@ router.post(
 // POST /api/opd/tokens/:tokenId/complete - Complete service (IN_SERVICE -> COMPLETED)
 router.post(
   '/tokens/:tokenId/complete',
+  requireStaff,
   validateParams(tokenIdParamSchema),
   validateBody(completeTokenSchema),
   opdTokenController.completeService
@@ -60,6 +64,7 @@ router.post(
 // POST /api/opd/tokens/:tokenId/cancel - Cancel token (WAITING/CALLED -> CANCELLED)
 router.post(
   '/tokens/:tokenId/cancel',
+  requireStaff,
   validateParams(tokenIdParamSchema),
   validateBody(cancelTokenSchema),
   opdTokenController.cancelToken

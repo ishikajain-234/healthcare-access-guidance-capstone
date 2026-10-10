@@ -6,6 +6,7 @@ const {
   validateParams,
   validateQuery,
 } = require('../middleware/safetyValidator');
+const requireStaff = require('../middleware/requireStaff');
 const {
   itemIdParamSchema,
   listInventoryItemsQuerySchema,
@@ -58,6 +59,7 @@ router.get(
 // POST /api/inventory/items/:itemId/receive
 router.post(
   '/items/:itemId/receive',
+  requireStaff,
   validateParams(itemIdParamSchema),
   validateBody(receiveStockSchema),
   inventoryController.receiveStock
@@ -66,6 +68,7 @@ router.post(
 // POST /api/inventory/items/:itemId/issue
 router.post(
   '/items/:itemId/issue',
+  requireStaff,
   validateParams(itemIdParamSchema),
   validateBody(issueStockSchema),
   inventoryController.issueStock
@@ -74,6 +77,7 @@ router.post(
 // POST /api/inventory/items/:itemId/adjust
 router.post(
   '/items/:itemId/adjust',
+  requireStaff,
   validateParams(itemIdParamSchema),
   validateBody(adjustStockSchema),
   inventoryController.adjustStock
@@ -82,6 +86,7 @@ router.post(
 // POST /api/inventory/items/:itemId/transfer-in
 router.post(
   '/items/:itemId/transfer-in',
+  requireStaff,
   validateParams(itemIdParamSchema),
   validateBody(transferInStockSchema),
   inventoryController.transferInStock
@@ -90,6 +95,7 @@ router.post(
 // POST /api/inventory/items/:itemId/transfer-out
 router.post(
   '/items/:itemId/transfer-out',
+  requireStaff,
   validateParams(itemIdParamSchema),
   validateBody(transferOutStockSchema),
   inventoryController.transferOutStock
