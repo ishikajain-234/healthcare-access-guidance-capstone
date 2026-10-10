@@ -363,7 +363,7 @@ sequenceDiagram
 | :--- | :--- | :--- |
 | **Client Application** | React 18 single-page app with view-switching AppShell, responsive Tailwind CSS layouts, and live health status indicator. | Dedicated mobile app (React Native / Flutter), progressive web app (PWA) offline caching. |
 | **API Architecture** | Express 4 REST API with strict Zod validation, parameter checking, and unified route tree. | GraphQL / gRPC interfaces for high-throughput inter-service communication. |
-| **Authentication & RBAC** | `requireAdmin` Bearer token middleware with local evaluation demo bypass. | OAuth2 / OIDC enterprise identity provider (Keycloak / Auth0), granular role-based permissions per department. |
+| **Authentication & RBAC** | `requireAdmin` Bearer token boundary on `/api/admin/*`, `requireStaff` authorization on operational state mutations, production bypass prohibition (`NODE_ENV=production`), and in-memory IP rate limiting (`X-RateLimit-*`). | OAuth2 / OIDC enterprise identity provider (Keycloak / Auth0), granular role-based permissions per department. |
 | **Persistence Engine** | PostgreSQL 14+ with 17 relational tables, composite foreign keys, and 4 PL/pgSQL triggers. | Read replicas for analytics, database table partitioning by month for `guidance_event` and `city_aggregate_snapshot`. |
 | **ETL & Telemetry** | Python batch pipelines (`transform_events.py`, `aggregate_city_snapshot.py`) with idempotent upserts. | Distributed workflow orchestration via Apache Airflow, real-time message streaming via Apache Kafka. |
 | **External Integration** | Explicitly isolated. Uses synthetic reference catalogues and simulated facilities. | HL7 FHIR interfaces for hospital Electronic Health Records (EHR), statutory verification gateway adapters. |
