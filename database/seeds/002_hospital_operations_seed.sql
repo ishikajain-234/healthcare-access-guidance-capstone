@@ -87,32 +87,32 @@ ON CONFLICT (hospital_id, ward_id) DO UPDATE SET
 -- Insert Demonstration Beds across Wards
 INSERT INTO bed (bed_id, hospital_id, ward_id, bed_number, current_state, is_simulated)
 VALUES
-    -- LNJP General Ward Beds
-    ('BED_LNJP_G01', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-01', 'AVAILABLE', TRUE),
-    ('BED_LNJP_G02', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-02', 'AVAILABLE', TRUE),
-    ('BED_LNJP_G03', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-03', 'AVAILABLE', TRUE),
-    ('BED_LNJP_G04', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-04', 'AVAILABLE', TRUE),
-    ('BED_LNJP_G05', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-05', 'AVAILABLE', TRUE),
-    ('BED_LNJP_G06', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-06', 'AVAILABLE', TRUE),
+    -- LNJP General Ward Beds (Diverse Operational States)
+    ('BED_LNJP_G01', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-01', 'AVAILABLE',      TRUE),
+    ('BED_LNJP_G02', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-02', 'OCCUPIED',       TRUE),
+    ('BED_LNJP_G03', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-03', 'RESERVED',       TRUE),
+    ('BED_LNJP_G04', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-04', 'CLEANING',       TRUE),
+    ('BED_LNJP_G05', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-05', 'OUT_OF_SERVICE', TRUE),
+    ('BED_LNJP_G06', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'G-06', 'AVAILABLE',      TRUE),
 
     -- LNJP ICU Beds
-    ('BED_LNJP_ICU01', 'HOSP_LNJP', 'WARD_LNJP_ICU', 'ICU-01', 'AVAILABLE', TRUE),
-    ('BED_LNJP_ICU02', 'HOSP_LNJP', 'WARD_LNJP_ICU', 'ICU-02', 'AVAILABLE', TRUE),
+    ('BED_LNJP_ICU01', 'HOSP_LNJP', 'WARD_LNJP_ICU', 'ICU-01', 'OCCUPIED',   TRUE),
+    ('BED_LNJP_ICU02', 'HOSP_LNJP', 'WARD_LNJP_ICU', 'ICU-02', 'AVAILABLE',  TRUE),
 
     -- GTB Beds
-    ('BED_GTB_G01',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-01', 'AVAILABLE', TRUE),
-    ('BED_GTB_G02',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-02', 'AVAILABLE', TRUE),
-    ('BED_GTB_G03',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-03', 'AVAILABLE', TRUE),
-    ('BED_GTB_G04',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-04', 'AVAILABLE', TRUE),
-    ('BED_GTB_ICU01', 'HOSP_GTB',  'WARD_GTB_ICU',  'ICU-01', 'AVAILABLE', TRUE),
+    ('BED_GTB_G01',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-01', 'OCCUPIED',       TRUE),
+    ('BED_GTB_G02',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-02', 'AVAILABLE',      TRUE),
+    ('BED_GTB_G03',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-03', 'RESERVED',       TRUE),
+    ('BED_GTB_G04',   'HOSP_GTB',  'WARD_GTB_GEN',  'G-04', 'AVAILABLE',      TRUE),
+    ('BED_GTB_ICU01', 'HOSP_GTB',  'WARD_GTB_ICU',  'ICU-01', 'AVAILABLE',    TRUE),
 
     -- DDU Beds
-    ('BED_DDU_G01',   'HOSP_DDU',  'WARD_DDU_GEN',   'G-01', 'AVAILABLE', TRUE),
-    ('BED_DDU_G02',   'HOSP_DDU',  'WARD_DDU_GEN',   'G-02', 'AVAILABLE', TRUE),
-    ('BED_DDU_G03',   'HOSP_DDU',  'WARD_DDU_GEN',   'G-03', 'AVAILABLE', TRUE),
-    ('BED_DDU_EM01',  'HOSP_DDU',  'WARD_DDU_EMERG', 'EM-01', 'AVAILABLE', TRUE),
-    ('BED_DDU_EM02',  'HOSP_DDU',  'WARD_DDU_EMERG', 'EM-02', 'AVAILABLE', TRUE),
-    ('BED_DDU_ICU01', 'HOSP_DDU',  'WARD_DDU_ICU',   'ICU-01', 'AVAILABLE', TRUE)
+    ('BED_DDU_G01',   'HOSP_DDU',  'WARD_DDU_GEN',   'G-01', 'AVAILABLE',     TRUE),
+    ('BED_DDU_G02',   'HOSP_DDU',  'WARD_DDU_GEN',   'G-02', 'OCCUPIED',      TRUE),
+    ('BED_DDU_G03',   'HOSP_DDU',  'WARD_DDU_GEN',   'G-03', 'AVAILABLE',     TRUE),
+    ('BED_DDU_EM01',  'HOSP_DDU',  'WARD_DDU_EMERG', 'EM-01', 'OCCUPIED',     TRUE),
+    ('BED_DDU_EM02',  'HOSP_DDU',  'WARD_DDU_EMERG', 'EM-02', 'AVAILABLE',    TRUE),
+    ('BED_DDU_ICU01', 'HOSP_DDU',  'WARD_DDU_ICU',   'ICU-01', 'AVAILABLE',    TRUE)
 ON CONFLICT (ward_id, bed_number) DO NOTHING;
 
 -- ============================================================================
@@ -148,3 +148,115 @@ ON CONFLICT (hospital_id, item_code) DO UPDATE SET
     current_stock     = EXCLUDED.current_stock,
     reorder_threshold = EXCLUDED.reorder_threshold,
     reorder_quantity  = EXCLUDED.reorder_quantity;
+
+-- ============================================================================
+-- 6. SYNTHETIC OPD TOKENS (Demonstration Queue with Mixed Operational Statuses)
+-- ============================================================================
+INSERT INTO opd_token (
+    token_id, hospital_id, department_id, counter_id, token_number, status, priority_level,
+    issued_at, called_at, service_started_at, service_completed_at, cancelled_at, is_simulated
+) VALUES
+    -- LNJP General Medicine OPD Tokens
+    ('e0000000-0000-0000-0000-000000000001', 'HOSP_LNJP', 'DEPT_LNJP_GEN', NULL,          'GEN-101', 'WAITING',    0,
+     NOW() - INTERVAL '30 minutes', NULL, NULL, NULL, NULL, TRUE),
+    ('e0000000-0000-0000-0000-000000000002', 'HOSP_LNJP', 'DEPT_LNJP_GEN', NULL,          'GEN-102', 'WAITING',    1,
+     NOW() - INTERVAL '25 minutes', NULL, NULL, NULL, NULL, TRUE),
+    ('e0000000-0000-0000-0000-000000000003', 'HOSP_LNJP', 'DEPT_LNJP_GEN', 'CTR_LNJP_G1', 'GEN-103', 'CALLED',     0,
+     NOW() - INTERVAL '20 minutes', NOW() - INTERVAL '5 minutes', NULL, NULL, NULL, TRUE),
+    ('e0000000-0000-0000-0000-000000000004', 'HOSP_LNJP', 'DEPT_LNJP_GEN', 'CTR_LNJP_G2', 'GEN-104', 'IN_SERVICE', 0,
+     NOW() - INTERVAL '40 minutes', NOW() - INTERVAL '15 minutes', NOW() - INTERVAL '12 minutes', NULL, NULL, TRUE),
+    ('e0000000-0000-0000-0000-000000000005', 'HOSP_LNJP', 'DEPT_LNJP_GEN', 'CTR_LNJP_G1', 'GEN-105', 'COMPLETED',  0,
+     NOW() - INTERVAL '60 minutes', NOW() - INTERVAL '35 minutes', NOW() - INTERVAL '30 minutes', NOW() - INTERVAL '10 minutes', NULL, TRUE),
+    ('e0000000-0000-0000-0000-000000000006', 'HOSP_LNJP', 'DEPT_LNJP_GEN', NULL,          'GEN-106', 'CANCELLED',  0,
+     NOW() - INTERVAL '45 minutes', NULL, NULL, NULL, NOW() - INTERVAL '25 minutes', TRUE),
+
+    -- GTB & DDU Tokens
+    ('e0000000-0000-0000-0000-000000000007', 'HOSP_GTB',  'DEPT_GTB_GEN',  NULL,          'GTB-201', 'WAITING',    0,
+     NOW() - INTERVAL '15 minutes', NULL, NULL, NULL, NULL, TRUE),
+    ('e0000000-0000-0000-0000-000000000008', 'HOSP_DDU',  'DEPT_DDU_GEN',  NULL,          'DDU-301', 'WAITING',    0,
+     NOW() - INTERVAL '10 minutes', NULL, NULL, NULL, NULL, TRUE)
+ON CONFLICT (token_id) DO UPDATE SET
+    status               = EXCLUDED.status,
+    counter_id           = EXCLUDED.counter_id,
+    called_at            = EXCLUDED.called_at,
+    service_started_at   = EXCLUDED.service_started_at,
+    service_completed_at = EXCLUDED.service_completed_at,
+    cancelled_at         = EXCLUDED.cancelled_at;
+
+-- ============================================================================
+-- 7. SYNTHETIC INPATIENT ADMISSIONS (Full Lifecycle Across Demonstration Wards)
+-- ============================================================================
+INSERT INTO admission (
+    admission_id, hospital_id, ward_id, bed_id, admission_number, status,
+    requested_at, assigned_at, admitted_at, discharged_at, cancelled_at, notes, is_simulated
+) VALUES
+    -- LNJP Admissions
+    ('f0000000-0000-0000-0000-000000000001', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'BED_LNJP_G02', 'ADM-LNJP-001', 'ADMITTED',
+     NOW() - INTERVAL '2 days', NOW() - INTERVAL '47 hours', NOW() - INTERVAL '46 hours', NULL, NULL,
+     'Synthetic admission intake demonstration record', TRUE),
+    ('f0000000-0000-0000-0000-000000000002', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'BED_LNJP_G03', 'ADM-LNJP-002', 'BED_ASSIGNED',
+     NOW() - INTERVAL '4 hours', NOW() - INTERVAL '2 hours', NULL, NULL, NULL,
+     'Synthetic bed allocation ready for patient transport', TRUE),
+    ('f0000000-0000-0000-0000-000000000003', 'HOSP_LNJP', 'WARD_LNJP_GEN', NULL,           'ADM-LNJP-003', 'PENDING_REVIEW',
+     NOW() - INTERVAL '90 minutes', NULL, NULL, NULL, NULL,
+     'Awaiting bed coordinator operational review', TRUE),
+    ('f0000000-0000-0000-0000-000000000004', 'HOSP_LNJP', 'WARD_LNJP_GEN', NULL,           'ADM-LNJP-004', 'ADMISSION_REQUESTED',
+     NOW() - INTERVAL '20 minutes', NULL, NULL, NULL, NULL,
+     'Newly requested admission request', TRUE),
+    ('f0000000-0000-0000-0000-000000000005', 'HOSP_LNJP', 'WARD_LNJP_GEN', 'BED_LNJP_G01', 'ADM-LNJP-005', 'DISCHARGED',
+     NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days' + INTERVAL '1 hour', NOW() - INTERVAL '5 days' + INTERVAL '2 hours',
+     NOW() - INTERVAL '1 day', NULL, 'Synthetic completed inpatient episode', TRUE),
+    ('f0000000-0000-0000-0000-000000000006', 'HOSP_LNJP', 'WARD_LNJP_GEN', NULL,           'ADM-LNJP-006', 'CANCELLED',
+     NOW() - INTERVAL '12 hours', NULL, NULL, NULL, NOW() - INTERVAL '10 hours',
+     'Cancelled by attending staff before bed assignment', TRUE),
+    ('f0000000-0000-0000-0000-000000000007', 'HOSP_LNJP', 'WARD_LNJP_ICU', 'BED_LNJP_ICU01', 'ADM-LNJP-ICU1', 'ADMITTED',
+     NOW() - INTERVAL '1 day', NOW() - INTERVAL '23 hours', NOW() - INTERVAL '22 hours', NULL, NULL,
+     'Synthetic critical care observation', TRUE)
+ON CONFLICT (admission_id) DO UPDATE SET
+    status        = EXCLUDED.status,
+    bed_id        = EXCLUDED.bed_id,
+    assigned_at   = EXCLUDED.assigned_at,
+    admitted_at   = EXCLUDED.admitted_at,
+    discharged_at = EXCLUDED.discharged_at,
+    cancelled_at  = EXCLUDED.cancelled_at;
+
+-- ============================================================================
+-- 8. SYNTHETIC INVENTORY TRANSACTIONS (Append-Only Ledger Demonstrator)
+-- Uses WHERE NOT EXISTS to guarantee idempotency under append-only trigger.
+-- ============================================================================
+INSERT INTO inventory_transaction (
+    transaction_id, hospital_id, item_id, transaction_type, quantity, batch_number, audit_reason, is_simulated
+)
+SELECT 'd0000000-0000-0000-0000-000000000001', 'HOSP_LNJP', 'ITEM_LNJP_MED_001', 'RECEIPT', 1000, 'BATCH-ALPHA-01', 'Initial synthetic stock intake', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM inventory_transaction WHERE transaction_id = 'd0000000-0000-0000-0000-000000000001');
+
+INSERT INTO inventory_transaction (
+    transaction_id, hospital_id, item_id, transaction_type, quantity, batch_number, audit_reason, is_simulated
+)
+SELECT 'd0000000-0000-0000-0000-000000000002', 'HOSP_LNJP', 'ITEM_LNJP_MED_001', 'ISSUE', 50, 'BATCH-ALPHA-01', 'General OPD pharmacy synthetic dispensation', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM inventory_transaction WHERE transaction_id = 'd0000000-0000-0000-0000-000000000002');
+
+INSERT INTO inventory_transaction (
+    transaction_id, hospital_id, item_id, transaction_type, quantity, batch_number, audit_reason, is_simulated
+)
+SELECT 'd0000000-0000-0000-0000-000000000003', 'HOSP_LNJP', 'ITEM_LNJP_MED_002', 'ADJUSTMENT', 20, 'BATCH-BETA-01', 'Periodic inventory stock reconciliation', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM inventory_transaction WHERE transaction_id = 'd0000000-0000-0000-0000-000000000003');
+
+INSERT INTO inventory_transaction (
+    transaction_id, hospital_id, item_id, transaction_type, quantity, batch_number, audit_reason, is_simulated
+)
+SELECT 'd0000000-0000-0000-0000-000000000004', 'HOSP_LNJP', 'ITEM_LNJP_CON_001', 'RECEIPT', 500, 'BATCH-GLOVES-01', 'Consumable supply intake', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM inventory_transaction WHERE transaction_id = 'd0000000-0000-0000-0000-000000000004');
+
+INSERT INTO inventory_transaction (
+    transaction_id, hospital_id, item_id, transaction_type, quantity, batch_number, audit_reason, is_simulated
+)
+SELECT 'd0000000-0000-0000-0000-000000000005', 'HOSP_GTB', 'ITEM_GTB_MED_001', 'RECEIPT', 800, 'BATCH-GTB-01', 'Central store synthetic delivery', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM inventory_transaction WHERE transaction_id = 'd0000000-0000-0000-0000-000000000005');
+
+INSERT INTO inventory_transaction (
+    transaction_id, hospital_id, item_id, transaction_type, quantity, batch_number, audit_reason, is_simulated
+)
+SELECT 'd0000000-0000-0000-0000-000000000006', 'HOSP_DDU', 'ITEM_DDU_MED_001', 'RECEIPT', 900, 'BATCH-DDU-01', 'Dispensary intake', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM inventory_transaction WHERE transaction_id = 'd0000000-0000-0000-0000-000000000006');
+
