@@ -167,37 +167,43 @@ def export_json(metrics):
     print(f"[ETL EXPORT] Aggregated metrics exported to {out_file}")
 
 
-def main():
-    print("=" * 60)
-    print("Healthcare Access Guidance Prototype - ETL Pipeline")
-    print(f"Timestamp: {datetime.now(timezone.utc).isoformat()}")
-    print("=" * 60)
-
+def run_pipeline():
     conn = get_connection()
     try:
         df_sessions, df_events, df_dq = extract_data(conn)
         metrics = transform_metrics(df_sessions, df_events, df_dq)
         load_metrics(conn, metrics)
         export_json(metrics)
-
-        print("\n" + "=" * 60)
-        print("SUMMARY REPORT")
-        print("=" * 60)
-        print(f"Date:                       {metrics['metric_date']}")
-        print(f"Total Sessions:             {metrics['total_sessions']}")
-        print(f"Completed Sessions:         {metrics['completed_sessions']}")
-        print(f"Completion Rate:            {metrics['completion_rate_percent']}%")
-        print(f"Reference Matches Found:    {metrics['reference_found_count']}")
-        print(f"Reference Not Found:        {metrics['reference_not_found_count']}")
-        print(f"Total Guidance Events:      {metrics['total_guidance_events']}")
-        print(f"Avg Completion Duration:    {metrics['average_completion_seconds']}s")
-        print(f"Data Quality Issues:        {metrics['total_data_quality_issues']}")
-        print(f"Orphaned Events Detected:   {metrics['orphaned_events_detected']}")
-        print("=" * 60)
-        print("ETL execution completed with 0 errors.")
+        return metrics
     finally:
         conn.close()
 
 
+def main():
+    print("=" * 60)
+    print("Healthcare Access Guidance Prototype - ETL Pipeline")
+    print(f"Timestamp: {datetime.now(timezone.utc).isoformat()}")
+    print("=" * 60)
+
+    metrics = run_pipeline()
+
+    print("\n" + "=" * 60)
+    print("SUMMARY REPORT")
+    print("=" * 60)
+    print(f"Date:                       {metrics['metric_date']}")
+    print(f"Total Sessions:             {metrics['total_sessions']}")
+    print(f"Completed Sessions:         {metrics['completed_sessions']}")
+    print(f"Completion Rate:            {metrics['completion_rate_percent']}%")
+    print(f"Reference Matches Found:    {metrics['reference_found_count']}")
+    print(f"Reference Not Found:        {metrics['reference_not_found_count']}")
+    print(f"Total Guidance Events:      {metrics['total_guidance_events']}")
+    print(f"Avg Completion Duration:    {metrics['average_completion_seconds']}s")
+    print(f"Data Quality Issues:        {metrics['total_data_quality_issues']}")
+    print(f"Orphaned Events Detected:   {metrics['orphaned_events_detected']}")
+    print("=" * 60)
+    print("ETL execution completed with 0 errors.")
+
+
 if __name__ == "__main__":
     main()
+
