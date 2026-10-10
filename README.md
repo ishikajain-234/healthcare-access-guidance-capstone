@@ -19,43 +19,67 @@
 
 ---
 
-## 1. System Architecture & Relational Schema (7 Tables)
+## 1. System Architecture & Relational Schema (17 Tables — Architecture Freeze v2.1)
 
-The database schema defines 7 tables:
-1. `source_document`: Tracks metadata, file integrity hash (not proof of provenance), nullable publication date/URL, and non-authoritative flag.
-2. `source_import_run`: Audit log of seed/import execution runs (`STUDENT_TEAM_REVIEWED_SYNTHETIC`).
-3. `package_reference`: Controlled demonstration catalogue containing fictional synthetic demo records (linked to `source_document` and `source_import_run` via foreign keys).
-4. `guidance_session`: Anonymous UUID-based guidance session state machine tracker.
-5. `guidance_event`: Database-enforced append-only audit event ledger (protected against UPDATE/DELETE via a PostgreSQL trigger).
-6. `data_quality_issue`: Anomaly and integrity audit ledger.
-7. `analytics_summary`: Rollup summary table populated by the Python Data Engineering batch aggregation script.
+> **Authoritative Architecture Documentation**:
+> Complete Stage 1 architectural blueprints, engineering justifications, and Mermaid diagrams are located in [`docs/architecture/`](./docs/architecture/README.md):
+> - **[Architecture Overview & Index](./docs/architecture/README.md)**
+> - **[Technology Stack & Justification](./docs/architecture/tech-stack.md)**
+> - **[17-Table Entity-Relationship Diagram](./docs/architecture/er-diagram.md)**
+> - **[Data Flow Diagram — Level 0 (System Context)](./docs/architecture/dfd-level-0.md)**
+> - **[Data Flow Diagram — Level 1 (Subsystem Processes)](./docs/architecture/dfd-level-1.md)**
+> - **[End-to-End System Architecture](./docs/architecture/system-architecture.md)**
+
+The relational database schema defines **17 tables** organized across three operational domains:
+
+1. **Citizen Guidance Core**:
+   - `source_document`: Tracks metadata, SHA-256 integrity hash, non-authoritative flag.
+   - `source_import_run`: Audit log of seed/import execution runs (`STUDENT_TEAM_REVIEWED_SYNTHETIC`).
+   - `package_reference`: Controlled demonstration catalogue of fictional synthetic demo items (`DEMO-ALPHA-001`).
+   - `guidance_session`: Anonymous UUID-based guidance session state machine tracker.
+   - `guidance_event`: Database-enforced append-only audit event ledger (trigger `trg_prevent_guidance_event_mutation`).
+   - `data_quality_issue`: Anomaly and integrity audit ledger.
+   - `analytics_summary`: Rollup summary table populated by `etl/transform_events.py`.
+2. **Hospital Operations Foundation**:
+   - `hospital`: Facility registry (`HOSP-001`, `HOSP-002`).
+   - `department`: Clinical and administrative departments.
+   - `opd_queue_counter`: Physical and virtual consultation counters.
+   - `opd_token`: Queue tokens with state-controlled lifecycle timestamps.
+   - `bed_ward`: Hospital wards with capacity tracking (`GENERAL`, `ICU`, `HDU`, `EMERGENCY`).
+   - `bed`: Physical beds with state machine transition trigger (`trg_validate_bed_state_transition`).
+   - `admission`: Inpatient admissions with bed hierarchy validation trigger (`trg_validate_admission_bed_hierarchy`).
+   - `inventory_item`: Synthetic medicine and consumable inventory catalog.
+   - `inventory_transaction`: Append-only stock ledger (trigger `trg_prevent_inventory_transaction_mutation`).
+3. **Municipal Operational Telemetry**:
+   - `city_aggregate_snapshot`: Periodic offline multi-tier operational telemetry snapshots (DEPARTMENT, HOSPITAL, CITY levels) populated by `etl/aggregate_city_snapshot.py`.
 
 ```
 [ User Browser ]
-       |  (Controlled Dropdown Only: DEMO_ALPHA, DEMO_BETA, DEMO_GAMMA, NO_MATCH_DEMO)
-       v
-[ React + Vite UI (apps/web) ]
+  ├── Citizen Guidance (Controlled Dropdowns: DEMO_ALPHA, DEMO_BETA, DEMO_GAMMA, NO_MATCH_DEMO)
+  └── Staff Operations Console (OPD Queues, Ward Beds, Inpatient Admissions, Dispensary Stock)
        |
        |  Canonical REST API Endpoints (JSON with UUID Session Tracking)
        v
 [ Express.js REST API (apps/api - Port 5001) ]
-   ├── requireAdmin Authorization Boundary (/api/admin/*)
-   ├── Per-Endpoint Strict Zod Schemas (Unknown-key rejection, no free-text)
-   ├── Deterministic Guidance State Machine (Enforces strict transitions)
-   └── Transactional Append-Only Event Logger
+  ├── requireAdmin Authorization Boundary (/api/admin/*)
+  ├── Strict Zod Schemas (Unknown-key rejection, param checking)
+  ├── State Machine Controllers (Guidance, OPD Token, Bed State, Inpatient Admission)
+  ├── M/M/c Erlang-C Theoretical Queuing Engine
+  └── Database Connection Pool (pg.Pool with Parameterized Queries)
        |
        v
-[ PostgreSQL Database (healthcare_guidance_db) - 7 Tables ]
-   ├── source_document
-   ├── source_import_run
-   ├── package_reference
-   ├── guidance_session
-   ├── guidance_event (Append-only via trigger trg_prevent_guidance_event_mutation)
-   ├── data_quality_issue
-   └── analytics_summary
+[ PostgreSQL Database (healthcare_guidance_db) - 17 Tables ]
+  ├── Guidance Core: source_document, source_import_run, package_reference, guidance_session,
+  │                  guidance_event (Append-Only Trigger), data_quality_issue, analytics_summary
+  ├── Hospital Ops:  hospital, department, opd_queue_counter, opd_token,
+  │                  bed_ward, bed (State Transition Trigger), admission (Hierarchy Trigger),
+  │                  inventory_item, inventory_transaction (Append-Only Trigger)
+  └── Municipal:     city_aggregate_snapshot (Idempotent Arbiter uq_city_snap_slot)
        ^
        | Batch Aggregate Queries (Non-PII Telemetry)
-[ Python ETL Service (etl/transform_events.py) ]
+[ Python ETL Service (etl/) ]
+  ├── transform_events.py (Daily Session Metrics -> analytics_summary)
+  └── aggregate_city_snapshot.py (Hierarchical Telemetry -> city_aggregate_snapshot)
 ```
 
 ---
@@ -153,7 +177,13 @@ pip install -r requirements.txt
 python transform_events.py
 ```
 
-### Step 5: Review Usability & Source Verification Documentation
+### Step 5: Review Architecture, Usability & Verification Documentation
+- **Stage 1 Architecture Documentation**: [docs/architecture/README.md](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/architecture/README.md)
+  - [Technology Stack & Justifications](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/architecture/tech-stack.md)
+  - [17-Table Entity-Relationship Diagram](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/architecture/er-diagram.md)
+  - [Data Flow Diagram — Level 0 (System Context)](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/architecture/dfd-level-0.md)
+  - [Data Flow Diagram — Level 1 (Subsystem Processes)](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/architecture/dfd-level-1.md)
+  - [End-to-End System Architecture](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/architecture/system-architecture.md)
 - **Usability Test Protocol**: [docs/usability_test_plan.md](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/usability_test_plan.md)
 - **Usability Findings Ledger**: [docs/usability_findings.md](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/usability_findings.md)
 - **Source Verification Gate**: [docs/source_verification_gate.md](file:///Users/ishikajain/healthcare-access-guidance-capstone/docs/source_verification_gate.md)
