@@ -19,6 +19,16 @@ class HospitalController {
       next(err);
     }
   }
+
+  async listCounters(req, res, next) {
+    try {
+      const { hospitalId, departmentId } = req.params;
+      const data = await hospitalService.listCountersByDepartment(hospitalId, departmentId);
+      res.status(200).json(data);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new HospitalController();

@@ -29,6 +29,13 @@ const hospitalIdParamSchema = z
   })
   .strict();
 
+const hospitalDeptParamSchema = z
+  .object({
+    hospitalId: z.string().trim().min(1, 'hospitalId parameter cannot be empty').max(64),
+    departmentId: z.string().trim().min(1, 'departmentId parameter cannot be empty').max(64),
+  })
+  .strict();
+
 const tokenIdParamSchema = z
   .object({
     tokenId: z.string().uuid({ message: 'tokenId parameter must be a valid UUIDv4' }),
@@ -105,6 +112,7 @@ const opdAnalyticsQuerySchema = z
 module.exports = {
   checkProhibitedKeys,
   hospitalIdParamSchema,
+  hospitalDeptParamSchema,
   tokenIdParamSchema,
   createTokenSchema,
   callTokenSchema,

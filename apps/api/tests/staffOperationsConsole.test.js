@@ -23,6 +23,10 @@ describe('Staff Operations Console - Backend API Integration Suite', () => {
     const hosp = res.body.hospitals.find((h) => h.hospital_id === HOSP_ID);
     expect(hosp).toBeDefined();
     expect(hosp.is_simulated).toBe(true);
+
+    const dduHosp = res.body.hospitals.find((h) => h.hospital_id === 'HOSP_DDU');
+    expect(dduHosp).toBeDefined();
+    expect(dduHosp.hospital_name).toContain('DDU');
   });
 
   test('2. GET /api/hospitals/:hospitalId/departments returns department choices', async () => {
@@ -34,6 +38,25 @@ describe('Staff Operations Console - Backend API Integration Suite', () => {
     const dept = res.body.departments.find((d) => d.department_id === DEPT_ID);
     expect(dept).toBeDefined();
     expect(dept.department_code).toBe('GEN_MED');
+  });
+
+  test('2b. GET /api/hospitals/:hospitalId/departments/:departmentId/counters returns counter choices', async () => {
+    const res = await request(app).get(`/api/hospitals/${HOSP_ID}/departments/${DEPT_ID}/counters`);
+    expect(res.status).toBe(200);
+    expect(res.body.hospital_id).toBe(HOSP_ID);
+    expect(res.body.department_id).toBe(DEPT_ID);
+    expect(Array.isArray(res.body.counters)).toBe(true);
+    expect(res.body.total_counters).toBeGreaterThan(0);
+
+    // Error handling: nonexistent hospital
+    const notFoundHosp = await request(app).get(`/api/hospitals/NONEXISTENT_HOSP/departments/${DEPT_ID}/counters`);
+    expect(notFoundHosp.status).toBe(404);
+    expect(notFoundHosp.body.error_code).toBe('HOSPITAL_NOT_FOUND');
+
+    // Error handling: department-hospital mismatch
+    const mismatch = await request(app).get(`/api/hospitals/HOSP_GTB/departments/${DEPT_ID}/counters`);
+    expect(mismatch.status).toBe(400);
+    expect(mismatch.body.error_code).toBe('DEPARTMENT_HOSPITAL_MISMATCH');
   });
 
   test('3. GET /api/hospitals/:hospitalId/beds/availability returns finite-state bed summary & ICU', async () => {

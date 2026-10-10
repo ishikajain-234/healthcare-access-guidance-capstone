@@ -3,7 +3,7 @@ const router = express.Router();
 const hospitalController = require('../controllers/hospitalController');
 const bedController = require('../controllers/bedController');
 const { validateParams } = require('../middleware/safetyValidator');
-const { hospitalIdParamSchema } = require('../validators/opdValidators');
+const { hospitalIdParamSchema, hospitalDeptParamSchema } = require('../validators/opdValidators');
 
 // GET /api/hospitals
 router.get('/', hospitalController.listHospitals);
@@ -13,6 +13,13 @@ router.get(
   '/:hospitalId/departments',
   validateParams(hospitalIdParamSchema),
   hospitalController.listDepartments
+);
+
+// GET /api/hospitals/:hospitalId/departments/:departmentId/counters
+router.get(
+  '/:hospitalId/departments/:departmentId/counters',
+  validateParams(hospitalDeptParamSchema),
+  hospitalController.listCounters
 );
 
 // GET /api/hospitals/:hospitalId/wards
